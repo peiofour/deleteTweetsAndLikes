@@ -59,3 +59,8 @@ def delete_tweet(api, date, r):
 
     print("Number of deleted tweets : %s\n" % count)
 
+
+def error(message, exit_code=1):
+    sys.stderr.write("Error %s\n" % message)
+    exit(exit_code)
+
