@@ -64,3 +64,22 @@ def error(message, exit_code=1):
     sys.stderr.write("Error %s\n" % message)
     exit(exit_code)
 
+
+def main():
+    parser = argparse.ArgumentParser(description="Delete tweets")
+    parser.add_argument("-d", dest="date", required=True, help="Delete tweets until this date")
+    parser.add_argument("-r", dest="restrict", choices=["reply", "retweet"], help="Restrict to retweets et replies")
+
+    args = parser.parse_args()
+
+    api = twitter.Api(
+        consumer_key="",
+        consumer_secret="",
+        access_token_key="",
+        access_token_secret=""
+    )
+    delete_tweet(api, args.date, args.resctrict)
+
+
+if __name__ == "__main__":
+    main()
