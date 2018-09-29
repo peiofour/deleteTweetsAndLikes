@@ -1,17 +1,15 @@
-#!/usr/bin/env python
-
 # Made by Pierre Fournier
 
 import argparse
-import twitter
 import csv
 import sys
 import time
-import os
+import twitter
 from dateutil.parser import parse
 
 
-def delete_like(api, date, r):
+def delete_like(api):
+    print("Deleting likes\n")
     with open("likes.csv") as file:
         count = 0
 
@@ -34,6 +32,7 @@ def delete_like(api, date, r):
 
 
 def delete_tweet(api, date, r):
+    print("Deleting tweets\n")
     with open("tweets.csv") as file:
         count = 0
 
@@ -66,9 +65,12 @@ def error(message, exit_code=1):
 
 
 def main():
-    parser = argparse.ArgumentParser(description="Delete tweets")
-    parser.add_argument("-d", dest="date", required=True, help="Delete tweets until this date")
-    parser.add_argument("-r", dest="restrict", choices=["reply", "retweet"], help="Restrict to retweets et replies")
+
+    parser = argparse.ArgumentParser(description="Delete tweets or likes")
+
+    parser.add_argument("--likes", dest="likes", help="Choose to delete tweet likes", action="store_true")
+    parser.add_argument("-d", dest="date", help="Delete tweets until this date")
+    parser.add_argument("-r", dest="restrict", choices=["reply", "retweet"], help="Restrict to retweets or replies")
 
     args = parser.parse_args()
 
@@ -78,7 +80,15 @@ def main():
         access_token_key="",
         access_token_secret=""
     )
-    delete_tweet(api, args.date, args.resctrict)
+
+    if args.likes:
+        delete_like(api)
+
+    elif args.date and args.restrict:
+            delete_tweet(api, args.date, args.resctrict)
+
+    else:
+        print("Missing date and if restrict")
 
 
 if __name__ == "__main__":
